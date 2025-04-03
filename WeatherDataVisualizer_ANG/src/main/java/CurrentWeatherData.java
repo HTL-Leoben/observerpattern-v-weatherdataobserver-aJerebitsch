@@ -1,4 +1,6 @@
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 public class CurrentWeatherData implements WeatherData {
@@ -52,6 +54,9 @@ public class CurrentWeatherData implements WeatherData {
                 rainProbability == that.rainProbability &&
                 currentCondition == that.currentCondition;
     }
+
+
+
 
     @Override
     public int hashCode() {

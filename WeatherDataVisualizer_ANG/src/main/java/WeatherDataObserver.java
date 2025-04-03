@@ -1,3 +1,8 @@
+import javafx.scene.Parent;
+
 public interface WeatherDataObserver {
-    void update(WeatherData weatherData);
+
+    Parent getRoot();
+
+    void updateWeatherVisualization(WeatherData currentWeather);
 }

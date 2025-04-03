@@ -11,7 +11,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WeatherVisualizer {
+public class WeatherVisualizer implements WeatherDataObserver {
+
+
+
     private XYChart.Series<Number, Number> temperatureSeries;
     private LineChart<Number, Number> lineChart;
     private NumberAxis xAxis;
@@ -21,7 +24,6 @@ public class WeatherVisualizer {
     private Label timeLabel;
     private ImageView weatherIconView;
     private VBox root;
-
     private static final int MAX_DATA_POINTS = 20;
     private int dataPointCounter = 0;
 

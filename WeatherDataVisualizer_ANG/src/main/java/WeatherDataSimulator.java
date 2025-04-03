@@ -3,16 +3,40 @@ import javafx.animation.AnimationTimer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
-public class WeatherDataSimulator {
+public class WeatherDataSimulator implements SubjectInterface{
 
-    private WeatherVisualizer visualizer;
     private Random random;
     private double lastTemperature;
     private int intervalMinutes;
     private LocalDateTime lastTimestamp;
     private Season currentSeason;
+    private List<WeatherDataObserver> observerList;
+
+    @Override
+    public void registerObserver(WeatherDataObserver observer) {
+        observerList.add(observer);
+    }
+
+    @Override
+    public void removeObserver(WeatherDataObserver observer) {
+        observerList.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        if (observerList.isEmpty()) {
+            System.out.println("Keine Observer registriert");
+            return;
+        }
+        WeatherData currentWeather = generateRealisticWeatherData(); // Neue Wetterdaten generieren
+        for (WeatherDataObserver observer : observerList) {
+            observer.updateWeatherVisualization(currentWeather); // Observer mit aktuellen Wetterdaten updaten
+        }
+    }
 
     // Enum für Jahreszeiten bleibt unverändert
     public enum Season {
@@ -42,9 +66,9 @@ public class WeatherDataSimulator {
         }
     }
 
-    // Konstruktor bleibt unverändert
-    public WeatherDataSimulator(WeatherVisualizer visualizer, LocalDate startDate, int intervalMinutes) {
-        this.visualizer = visualizer;
+
+    public WeatherDataSimulator(LocalDate startDate, int intervalMinutes) {
+        this.observerList = new LinkedList<>();
         this.random = new Random();
         this.intervalMinutes = intervalMinutes;
         this.lastTimestamp = LocalDateTime.of(startDate.getYear(), startDate.getMonth(), startDate.getDayOfMonth(),0,0);
@@ -123,7 +147,7 @@ public class WeatherDataSimulator {
     }
 
     // Restliche Methoden bleiben unverändert
-    private void startWeatherDataSimulation() {
+    public void startWeatherDataSimulation() {
         AnimationTimer timer = new AnimationTimer() {
             private long lastUpdate = 0;
 
@@ -131,7 +155,7 @@ public class WeatherDataSimulator {
             public void handle(long now) {
                 if (now - lastUpdate >= 2_000_000_000L) {
                     WeatherData currentWeather = generateRealisticWeatherData();
-                    visualizer.updateWeatherVisualization(currentWeather);
+                    notifyObservers();
                     lastUpdate = now;
                 }
             }
@@ -184,7 +208,6 @@ public class WeatherDataSimulator {
         lastTemperature = newTemperature;
         lastTimestamp = newTimestamp;
         currentSeason = newSeason;
-
         return weatherData;
     }
 

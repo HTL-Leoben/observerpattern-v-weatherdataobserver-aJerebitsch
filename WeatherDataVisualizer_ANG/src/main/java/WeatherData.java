@@ -24,4 +24,7 @@ public interface WeatherData {
      * @return Zeitpunkt der Wetteraufzeichnung
      */
     LocalDateTime getTimestamp();
+
+
+
 }
